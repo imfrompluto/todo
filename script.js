@@ -6,9 +6,47 @@ let edit = document.getElementById("edit")
 let ok = document.getElementById('ok')
 let currenttask
 let things = []
-if (localStorage.getItem('test') == false) {
-    localStorage.setItem('test', 1);
-};
+function createlistitem(val) {
+    let crossed = false
+    var li = document.createElement('li');
+    var p = document.createElement('p');
+    p.textContent = val;
+    li.appendChild(p)
+    ol.appendChild(li)
+
+    document.querySelector('#taskinput').value = "";
+    var editbutton = document.createElement('button');
+    var deletebutton = document.createElement('button');
+    editbutton.innerHTML = "🖊"
+    deletebutton.innerHTML = "🗑"
+    deletebutton.onclick = function(hi) {
+        li.remove()
+        things.splice(things.indexOf(val),1)
+        localStorage.things = things
+    }
+    editbutton.type = "button"
+    deletebutton.type = "button"
+    li.appendChild(editbutton)
+    li.appendChild(deletebutton)
+    editbutton.onclick = function () {
+        modal.style.opacity = 1
+        modal.style.pointerEvents = "auto"
+        edit.value = p.innerHTML
+        currenttask = p
+        console.log(currenttask);
+    }
+    p.onclick = function () {
+        if (crossed == true) {
+            p.style.textDecoration = "none"
+            crossed = false
+        }
+        else {
+            p.style.textDecoration = "line-through"
+            crossed = true
+        }
+    }
+
+}
 if (localStorage.getItem('things') == false || localStorage.getItem('things') == null) {
     localStorage.setItem('things', []);
 }
@@ -16,42 +54,7 @@ else {
     console.log(localStorage.getItem('things'));
     things = localStorage.getItem('things').split(",")
     for (let val of localStorage.getItem('things').split(",")) {
-        let crossed = false
-        var li = document.createElement('li');
-        var p = document.createElement('p');
-        p.textContent = val;
-        li.appendChild(p)
-        ol.appendChild(li)
-
-        document.querySelector('#taskinput').value = "";
-        var editbutton = document.createElement('button');
-        var deletebutton = document.createElement('button');
-        editbutton.innerHTML = "🖊"
-        deletebutton.innerHTML = "🗑"
-        deletebutton.onclick = function () {
-            li.remove()
-        }
-        editbutton.type = "button"
-        deletebutton.type = "button"
-        li.appendChild(editbutton)
-        li.appendChild(deletebutton)
-        editbutton.onclick = function () {
-            modal.style.opacity = 1
-            modal.style.pointerEvents = "auto"
-            edit.value = p.innerHTML
-            currenttask = p
-            console.log(currenttask);
-        }
-        p.onclick = function () {
-            if (crossed == true) {
-                p.style.textDecoration = "none"
-                crossed = false
-            }
-            else {
-                p.style.textDecoration = "line-through"
-                crossed = true
-            }
-        }
+        createlistitem(val)
 
     }
 }
@@ -65,46 +68,7 @@ pin.addEventListener('click', function (event) {
     localStorage.things = things
     event.preventDefault()
     if (val != "") {
-        let crossed = false
-        var li = document.createElement('li');
-        var p = document.createElement('p');
-        p.textContent = val;
-        li.appendChild(p)
-        ol.appendChild(li)
-
-        document.querySelector('#taskinput').value = "";
-        var editbutton = document.createElement('button');
-        var deletebutton = document.createElement('button');
-        editbutton.innerHTML = "🖊"
-        deletebutton.innerHTML = "🗑"
-        deletebutton.onclick = function () {
-            li.remove()
-            console.log(things.indexOf(val))
-            things.splice(things.indexOf(val),1)
-            console.log(things)
-            localStorage.things = things
-        }
-        editbutton.type = "button"
-        deletebutton.type = "button"
-        li.appendChild(editbutton)
-        li.appendChild(deletebutton)
-        editbutton.onclick = function () {
-            modal.style.opacity = 1
-            modal.style.pointerEvents = "auto"
-            edit.value = p.innerHTML
-            currenttask = p
-            console.log(currenttask);
-        }
-        p.onclick = function () {
-            if (crossed == true) {
-                p.style.textDecoration = "none"
-                crossed = false
-            }
-            else {
-                p.style.textDecoration = "line-through"
-                crossed = true
-            }
-        }
+      createlistitem(val)
 
 
     }
@@ -114,6 +78,8 @@ ok.onclick = function (event) {
     modal.style.opacity = 0
     event.preventDefault()
     modal.style.pointerEvents = "none"
+    things[things.indexOf(currenttask.innerHTML)] = edit.value
+    localStorage.things = things
     currenttask.innerHTML = edit.value
 }
 
@@ -128,5 +94,8 @@ bomb.onclick = function () {
     // // }
 }
 
+let fruits = ["grape", "orange", "banana"]
+let choice = "grape"
+fruits.splice(fruits.indexOf(choice),1)
 
-
+console.log(fruits);
